@@ -11,7 +11,13 @@
  * pour créer le code d'accès (il s'affiche dans le journal d'exécution).
  */
 
+const SPREADSHEET_ID = '1MpzCIcHZ6o-Q3pZ_k-p5oeDIkaCjaeAh1w0M0Y-tBJ4'; // Suivi des heures
 const SHEET_NAME = 'Pointage';
+
+// Fonctionne que le script soit relié au tableau ou créé à part.
+function ss_() {
+  return SpreadsheetApp.getActive() || SpreadsheetApp.openById(SPREADSHEET_ID);
+}
 const JOURS = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven'];
 
 // ---------- Mise en place ----------
@@ -44,7 +50,7 @@ function respond_(p) {
   try {
     checkKey_(p.key);
     switch (p.action) {
-      case 'ping':  out = { ok: true, data: { sheet: SpreadsheetApp.getActive().getName() } }; break;
+      case 'ping':  out = { ok: true, data: { sheet: ss_().getName() } }; break;
       case 'day':   out = { ok: true, data: getDay(p.date) }; break;
       case 'punch': out = { ok: true, data: punch(p.date, p.type, p.time, p.pause) }; break;
       default: throw new Error('Action inconnue.');
@@ -65,14 +71,14 @@ function checkKey_(key) {
 // ---------- Lecture du tableau ----------
 
 function sheet_() {
-  const sh = SpreadsheetApp.getActive().getSheetByName(SHEET_NAME);
+  const sh = ss_().getSheetByName(SHEET_NAME);
   if (!sh) throw new Error('Onglet "' + SHEET_NAME + '" introuvable.');
   return sh;
 }
 
 // Lit les colonnes A à I une seule fois et indexe les lignes par date (yyyy-MM-dd).
 function index_(sh) {
-  const tz = SpreadsheetApp.getActive().getSpreadsheetTimeZone();
+  const tz = ss_().getSpreadsheetTimeZone();
   const n = sh.getLastRow() - 1;
   const range = sh.getRange(2, 1, n, 9);
   const values = range.getValues();
