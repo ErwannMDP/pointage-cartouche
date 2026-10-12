@@ -1,6 +1,6 @@
 // Garde l'interface en cache pour un démarrage instantané.
 // Les appels au tableau (script.google.com) passent toujours par le réseau.
-const CACHE = 'pointage-v2';
+const CACHE = 'pointage-v3';
 const SHELL = ['./', 'index.html', 'styles.css', 'app.js', 'manifest.webmanifest',
                'icons/icon-180.png', 'icons/icon-192.png', 'icons/icon-512.png'];
 

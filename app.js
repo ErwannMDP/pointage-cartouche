@@ -208,6 +208,9 @@ tick();
 setInterval(tick, 15000);
 if (config.url && config.key) openMain(); else openSetup();
 
+// Demande à iOS de ne jamais effacer les réglages enregistrés (connexion faite une seule fois).
+if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
+
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js').catch(() => {});
 }
