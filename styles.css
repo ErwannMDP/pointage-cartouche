@@ -105,3 +105,11 @@ button, input { font-family: inherit; }
   .clock { font-size: 64px; }
   .go { font-size: 15px; padding-left: 16px; }
 }
+
+/* Message après validation */
+.toast { position: fixed; left: 50%; bottom: calc(100px + var(--bottom)); z-index: 10;
+         transform: translate(-50%, 24px) scale(.96); opacity: 0; pointer-events: none;
+         width: calc(100% - 32px); max-width: 408px; background: var(--pink); color: var(--white);
+         border-radius: 26px; padding: 18px 22px; font-size: 19px; font-weight: 700; text-align: center;
+         box-shadow: 0 12px 30px rgba(242,112,138,.35); transition: opacity .3s ease, transform .3s ease; }
+.toast.show { opacity: 1; transform: translate(-50%, 0) scale(1); }

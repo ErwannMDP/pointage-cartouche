@@ -35,6 +35,14 @@ const $ = id => document.getElementById(id);
 const pad = n => String(n).padStart(2, '0');
 const isoDate = d => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
 const hhmm = d => pad(d.getHours()) + ':' + pad(d.getMinutes());
+let toastTimer;
+function toast(text) {
+  const t = $('toast');
+  t.textContent = text;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 4000);
+}
 function show(el, text, cls) { $(el).textContent = text; $(el).className = 'msg ' + (cls || ''); }
 
 // ---------- Écran de connexion ----------
@@ -165,6 +173,7 @@ async function punch() {
     }, true);
     render(d);
     show('msg', label + ' enregistrée à ' + time + '.', 'ok');
+    if (label === 'Arrivée') toast('Bonne journée, travaille bien 😘');
     timeTouched = false;
     if (navigator.vibrate) navigator.vibrate(30);
   } catch (err) {

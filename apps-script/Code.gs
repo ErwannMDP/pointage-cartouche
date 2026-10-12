@@ -111,6 +111,15 @@ function fmtHours_(h) {
   return Math.floor(t / 60) + 'h' + String(t % 60).padStart(2, '0');
 }
 
+// "9:32" ou "-1:15" (valeur affichée au format [h]:mm) -> heures décimales.
+// On lit l'affichage car Sheets renvoie les durées sous forme de Date, pas de nombre.
+function displayToHours_(s) {
+  const m = /^(-)?(\d+):(\d{2})/.exec(String(s || '').trim());
+  if (!m) return 0;
+  const h = Number(m[2]) + Number(m[3]) / 60;
+  return m[1] ? -h : h;
+}
+
 // Les 5 jours ouvrés (lundi à vendredi) de la semaine qui contient dateStr.
 function week_(byDate, dateStr) {
   const p = dateStr.split('-').map(Number);
@@ -120,8 +129,8 @@ function week_(byDate, dateStr) {
   const days = JOURS.map(function (name, i) {
     const key = Utilities.formatDate(new Date(monday.getTime() + i * 86400000), 'UTC', 'yyyy-MM-dd');
     const e = byDate[key];
-    const w = e && typeof e.v[6] === 'number' ? e.v[6] * 24 : 0;   // colonne G
-    const pl = e && typeof e.v[7] === 'number' ? e.v[7] * 24 : 0;  // colonne H
+    const w = e ? displayToHours_(e.d[6]) : 0;   // colonne G : heures travaillées
+    const pl = e ? displayToHours_(e.d[7]) : 0;  // colonne H : heures prévues
     worked += w; planned += pl;
     return { name: name, date: key, worked: w, planned: pl, label: w ? fmtHours_(w) : '' };
   });
